@@ -20,8 +20,11 @@ export const getPricePerSqrMeterFromAPI = async (): Promise<number> => {
 export const calculatePricePerSquareMeter = async (
   sqrMeter: number,
 ): Promise<number> => {
-  const pricePerSqrMeter = await getPricePerSqrMeterFromAPI();
+  if (sqrMeter < 10 || sqrMeter > 10000) {
+    throw new Error('Square meter price should be between 10 and 10000');
+  }
 
+  const pricePerSqrMeter = await getPricePerSqrMeterFromAPI();
   const calculatedNewPrice = calculatePrice(pricePerSqrMeter, sqrMeter);
 
   return calculatedNewPrice;
