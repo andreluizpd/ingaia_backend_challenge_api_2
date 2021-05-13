@@ -1,12 +1,24 @@
 import express, { Request, Response } from 'express';
 import * as PropertyService from './properties.service';
 import { BaseProperty, Property } from './property.interface';
+import { Properties } from './properties.interface';
 
 export const propertiesRouter = express.Router();
 
 propertiesRouter.get('/', async (req: Request, res: Response) => {
   try {
     const items: Property[] = await PropertyService.findAll();
+
+    res.status(200).send(items);
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+});
+
+propertiesRouter.get('/temp', async (req: Request, res: Response) => {
+  try {
+    const items: Properties =
+      await PropertyService.calculatePricePerSquareMeter();
 
     res.status(200).send(items);
   } catch (e) {

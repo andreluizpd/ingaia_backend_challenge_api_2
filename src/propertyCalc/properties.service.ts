@@ -1,40 +1,48 @@
 import { BaseProperty, Property } from './property.interface';
 import { Properties } from './properties.interface';
+import { getPricePerSqrMeter } from '../api/pricesPerSquareMeters';
 
-let items: Properties = {
-  1: {
+let items: Properties = [
+  {
     id: 1,
     name: 'Burger',
     price: 599,
     description: 'Tasty',
     image: 'https://cdn.auth0.com/blog/whatabyte/burger-sm.png',
   },
-  2: {
+  {
     id: 2,
     name: 'Pizza',
     price: 299,
     description: 'Cheesy',
     image: 'https://cdn.auth0.com/blog/whatabyte/pizza-sm.png',
   },
-  3: {
+  {
     id: 3,
     name: 'Tea',
     price: 199,
     description: 'Informative',
     image: 'https://cdn.auth0.com/blog/whatabyte/tea-sm.png',
   },
-};
+];
 
 export const findAll = async (): Promise<Property[]> => Object.values(items);
 
-export const calculatePricePerSquareMeter = async (): Promise<Property[]> => {
-  // Pegar Dados Da API
+const calculatePrice = (sqrMeterPrice: number, sqrMeter: number): number =>
+  sqrMeter * sqrMeterPrice;
 
-  // Calcular novo Valor
+export const calculatePricePerSquareMeter = async (): Promise<any> => {
+  const { data } = await getPricePerSqrMeter();
+  const [pricePerSqrMeter] = data;
 
-  // Retornar para o usuário
+  const calculatedNewPrices = items.map(item => {
+    return {
+      ...item,
+      price: calculatePrice(pricePerSqrMeter.price, item.price),
+    };
+  });
 
-  return [];
+  return calculatedNewPrices;
 };
 
 export const find = async (id: number): Promise<Property> => items[id];
