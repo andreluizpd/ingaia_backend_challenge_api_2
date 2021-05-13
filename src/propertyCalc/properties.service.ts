@@ -1,84 +1,28 @@
-import { BaseProperty, Property } from './property.interface';
-import { Properties } from './properties.interface';
 import { getPricePerSqrMeter } from '../api/pricesPerSquareMeters';
 
-let items: Properties = [
-  {
-    id: 1,
-    name: 'Burger',
-    price: 599,
-    description: 'Tasty',
-    image: 'https://cdn.auth0.com/blog/whatabyte/burger-sm.png',
-  },
-  {
-    id: 2,
-    name: 'Pizza',
-    price: 299,
-    description: 'Cheesy',
-    image: 'https://cdn.auth0.com/blog/whatabyte/pizza-sm.png',
-  },
-  {
-    id: 3,
-    name: 'Tea',
-    price: 199,
-    description: 'Informative',
-    image: 'https://cdn.auth0.com/blog/whatabyte/tea-sm.png',
-  },
-];
-
-export const findAll = async (): Promise<Property[]> => Object.values(items);
+let pricePerSqrMeterCache: number;
 
 const calculatePrice = (sqrMeterPrice: number, sqrMeter: number): number =>
   sqrMeter * sqrMeterPrice;
 
-export const calculatePricePerSquareMeter = async (): Promise<any> => {
-  const { data } = await getPricePerSqrMeter();
-  const [pricePerSqrMeter] = data;
+export const getPricePerSqrMeterFromAPI = async (): Promise<number> => {
+  if (!pricePerSqrMeterCache) {
+    const { data } = await getPricePerSqrMeter();
+    const [pricePerSqrMeter] = data;
+    pricePerSqrMeterCache = pricePerSqrMeter.price;
 
-  const calculatedNewPrices = items.map(item => {
-    return {
-      ...item,
-      price: calculatePrice(pricePerSqrMeter.price, item.price),
-    };
-  });
-
-  return calculatedNewPrices;
-};
-
-export const find = async (id: number): Promise<Property> => items[id];
-
-export const create = async (newItem: BaseProperty): Promise<Property> => {
-  const id = new Date().valueOf();
-
-  items[id] = {
-    id,
-    ...newItem,
-  };
-
-  return items[id];
-};
-
-export const update = async (
-  id: number,
-  itemUpdate: BaseProperty,
-): Promise<Property | null> => {
-  const item = await find(id);
-
-  if (!item) {
-    return null;
+    return pricePerSqrMeter.price;
   }
 
-  items[id] = { id, ...itemUpdate };
-
-  return items[id];
+  return pricePerSqrMeterCache;
 };
 
-export const remove = async (id: number): Promise<null | void> => {
-  const item = await find(id);
+export const calculatePricePerSquareMeter = async (
+  sqrMeter: number,
+): Promise<number> => {
+  const pricePerSqrMeter = await getPricePerSqrMeterFromAPI();
 
-  if (!item) {
-    return null;
-  }
+  const calculatedNewPrice = calculatePrice(pricePerSqrMeter, sqrMeter);
 
-  delete items[id];
+  return calculatedNewPrice;
 };
