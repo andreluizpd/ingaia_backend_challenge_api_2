@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --pretty --transpile-only src/index.ts",
+    "start": "ts-node-dev --respawn --pretty --transpile-only src/index.ts",
     "test:unit": "ENV_FILE=./config/.env.test jest"
   },
   "keywords": [],
