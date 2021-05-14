@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  - "16"
+script:
+  - echo 'Build starts!!'
+  - echo 'Installing Deps!'
+  - npm install
+  - echo 'Testing!'
+  - npm run test:unit
+deploy:
+  provider: heroku
+  api_key:
+    secure: $SECURE_KEY
+  app: $APP

@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://ingaia-api-1.herokuapp.com/api/v1/pricesPerSquareMeters',
+  baseURL: 'https://ingaia-api-1.herokuapp.com/api/v1/',
   // baseURL: 'http://127.0.0.1:7000/api/v1/',
 });
 
