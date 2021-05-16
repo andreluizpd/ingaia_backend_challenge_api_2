@@ -41,7 +41,7 @@ Instalação das dependências:
 
 ## Rodando o aplicativo
 
-Para rodas o aplicativo com o docker é bem simples, basta realizar os seguintes passos:
+Para rodar o aplicativo com o docker é bem simples, basta realizar os seguintes passos:
 
 Criação do arquivo .env:
 
